@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68.1.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kouriae"
+version = "v1.0"
+description = "Readable seven-character encoder"
+readme = "README.md"
+authors = [{ name = "tainn" }]
+keywords = ["kr", "kouriae", "encoder", "seven-character", "readable"]
+dependencies = []
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+dev = ["black", "ruff", "mypy"]
+
+[project.urls]
+Homepage = "https://github.com/tainn/kouriae"
+
+[project.scripts]
+kr = "kouriae:main"
+
+[tool.black]
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+src = ["kouriae"]
+select = ["I001", "F401"]
+
+[tool.ruff.isort]
+known-first-party = ["kouriae"]
+
+[tool.mypy]
+strict = true
+exclude = ["build"]
+
+[[tool.mypy.overrides]]
+module = ["setuptools"]
+ignore_missing_imports = true
