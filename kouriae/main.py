@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser, Namespace
+from collections import Counter
+from itertools import permutations
 from pathlib import Path
 
 from .enums import Kind, Source
@@ -77,7 +79,26 @@ class Kouriae:
         raise BadMatchError(self.kind)
 
     def _encode(self) -> str:
-        ...
+        # k: u -> a, r: a -> u
+        segments: tuple[str, ...] = ("ku", "ra", "ko", "re", "ki", "ri", "ke", "ro", "ka", "ru")
+
+        words: list[str] = self.input.split()
+        encoded_words: list[str] = words.copy()
+        encode_key: str = ""
+        seg_order: list = []
+        last_seg: tuple[str] = ("",)
+        perm_lv: int = 1
+        idx: int = 0
+        freq: dict[str, int] = {k: v for k, v in sorted(Counter(words).items(), key=lambda item: item[1], reverse=True)}
+
+        for word in freq:
+            if idx == len(tuple(permutations(segments, perm_lv))):
+                perm_lv += 1
+                idx = 0
+
+            encoded_word: str = "".join(tuple(permutations(segments, perm_lv))[idx])
+            encoded_words = [encoded_word if w == word else w for w in encoded_words]
+            idx += 1
 
     def _decode(self) -> str:
         ...
