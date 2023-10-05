@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kouriae"
-version = "v1.0"
+version = "1.0"
 description = "Readable seven-character encoder"
 readme = "README.md"
 authors = [{ name = "tainn" }]
