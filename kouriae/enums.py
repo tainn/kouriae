@@ -1,6 +1,11 @@
 from enum import Enum, auto
 
 
-class Input(Enum):
+class Source(Enum):
     STDIN = auto()
     FILE = auto()
+
+
+class Kind(Enum):
+    ENCODE = auto()
+    DECODE = auto()

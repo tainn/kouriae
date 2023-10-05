@@ -1,30 +1,87 @@
 #!/usr/bin/env python3
 
-import sys
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
-from .enums import Input
-from .exceptions import NotAFileError, TooManyArgumentsError
+from .enums import Kind, Source
+from .exceptions import BadMatchError
 
 
 class Kouriae:
-    def __init__(self, args: list[str]) -> None:
-        self.args: list[str] = args
-        self.kind: Input = self._kind_check()
+    def __init__(self) -> None:
+        self.args: Namespace = self._parse_args()
+        self.source: Source = self._check_source()
+        self.kind: Kind = self._check_kind()
+        self.input: str = self._read_input()
+        self.output: str = self._encode_decode()
 
-    def _kind_check(self) -> Input:
-        if len(self.args) > 1:
-            raise TooManyArgumentsError(f"{len(self.args)} provided, 1 allowed")
+    @staticmethod
+    def _parse_args() -> Namespace:
+        parser = ArgumentParser()
 
-        if not self.args:
-            return Input.STDIN
+        parser.add_argument(
+            "-f",
+            "--file",
+            type=str,
+            default=None,
+            required=False,
+            help="File with the text to encode/decode",
+        )
+        parser.add_argument(
+            "-d",
+            "--decode",
+            type=bool,
+            default=False,
+            required=False,
+            help="Decode the text",
+        )
 
-        if Path(self.args[0]).is_file():
-            return Input.FILE
+        return parser.parse_args()
 
-        raise NotAFileError(f"{self.args[0]} is not a file")
+    def _check_source(self) -> Source:
+        match self.args.file:
+            case None:
+                return Source.STDIN
+
+            case _:
+                return Source.FILE
+
+    def _check_kind(self) -> Kind:
+        match self.args.decode:
+            case False:
+                return Kind.ENCODE
+
+            case True:
+                return Kind.DECODE
+
+        raise BadMatchError(self.args.decode)
+
+    def _read_input(self) -> str:
+        match self.source:
+            case Source.STDIN:
+                return input()
+
+            case Source.FILE:
+                return Path(self.args.file).read_text()
+
+        raise BadMatchError(self.kind)
+
+    def _encode_decode(self) -> str:
+        match self.kind:
+            case Kind.ENCODE:
+                return self._encode()
+
+            case Kind.DECODE:
+                return self._decode()
+
+        raise BadMatchError(self.kind)
+
+    def _encode(self) -> str:
+        ...
+
+    def _decode(self) -> str:
+        ...
 
 
 def main() -> None:
-    kouriae = Kouriae(args=sys.argv[1:])
-    print(kouriae.kind.name)
+    Kouriae()
