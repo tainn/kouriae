@@ -28,7 +28,3 @@ class Kouriae:
 def main() -> None:
     kouriae = Kouriae(args=sys.argv[1:])
     print(kouriae.kind.name)
-
-
-if __name__ == "__main__":
-    main()
