@@ -20,6 +20,7 @@ Homepage = "https://github.com/tainn/kouriae"
 
 [project.scripts]
 kr = "kouriae:main"
+kouriae = "kouriae:main"
 
 [tool.black]
 line-length = 120
