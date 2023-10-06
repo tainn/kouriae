@@ -16,8 +16,8 @@ python3 -m pip install git+https://github.com/tainn/kouriae.git@v1.0
 
 ## Usage
 
-The script accessible under the `kr` or `kouriae` command. By default, or by passing in the `-e/--encode` flag, it will
-encode the message. By passing in the `-d/--decode` flag, it will decode the message.
+The script is accessible under the `kr` or `kouriae` command. By default, or by passing in the `-e/--encode` flag, it
+will encode the message. By passing in the `-d/--decode` flag, it will decode the message.
 
 - encode: 1 parameter in (text), 2 out (encoded text, key)
 - decode: 2 parameters in (encoded text, key), 1 out (decoded text)
