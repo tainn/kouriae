@@ -53,3 +53,7 @@ key: eJzLSM3JyY8ryUgtSlWMy8gvj0ssSo2rzC+1BwCBtQno
 
 hello there! how are you?
 ```
+
+## ^
+
+`^` is a reserved character. Don't use it. Or do. But I don't recommend it. Probably.
