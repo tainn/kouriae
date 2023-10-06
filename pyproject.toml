@@ -8,7 +8,7 @@ version = "1.0"
 description = "Readable seven-character encoder"
 readme = "README.md"
 authors = [{ name = "tainn" }]
-keywords = ["kr", "kouriae", "encoder", "seven-character", "readable"]
+keywords = ["kr", "kouriae", "encoder", "decoder"]
 dependencies = []
 requires-python = ">=3.11"
 
