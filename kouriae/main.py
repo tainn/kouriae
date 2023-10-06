@@ -1,91 +1,94 @@
 #!/usr/bin/env python3
 
+import base64
+import zlib
 from argparse import ArgumentParser, Namespace
 from collections import Counter
 from itertools import permutations
-from pathlib import Path
 
-from .enums import Kind, Source
-from .exceptions import BadMatchError
+from .enums import Kind
 
 
 class Kouriae:
     def __init__(self) -> None:
-        self.args: Namespace = self._parse_args()
-        self.source: Source = self._check_source()
-        self.kind: Kind = self._check_kind()
-        self.input: str = self._read_input()
-        self.output: str = self._encode_decode()
+        # k: u -> a, r: a -> u
+        self.segments: tuple[str, ...] = (
+            "ku",
+            "ra",
+            "ko",
+            "re",
+            "ki",
+            "ri",
+            "ke",
+            "ro",
+            "ka",
+            "ru",
+        )
+        self.idx: int = 0
+        self.perm_lv: int = 1
 
-    @staticmethod
-    def _parse_args() -> Namespace:
+        self.args: Namespace
+        self.kind: Kind
+        self.input: str
+        self.output: str
+        self.key: str
+
+        self._parse_args()
+        self._check_kind()
+        self._read_input()
+        self._encode_decode()
+        self._output()
+
+    def _parse_args(self) -> None:
         parser = ArgumentParser()
 
         parser.add_argument(
-            "-f",
-            "--file",
-            type=str,
-            default=None,
+            "-e",
+            "--encode",
+            action="store_true",
+            default=True,
             required=False,
-            help="File with the text to encode/decode",
+            help="Encode the text",
         )
         parser.add_argument(
             "-d",
             "--decode",
-            type=bool,
+            action="store_true",
             default=False,
             required=False,
             help="Decode the text",
         )
 
-        return parser.parse_args()
+        self.args = parser.parse_args()
 
-    def _check_source(self) -> Source:
-        match self.args.file:
-            case None:
-                return Source.STDIN
-
-            case _:
-                return Source.FILE
-
-    def _check_kind(self) -> Kind:
+    def _check_kind(self) -> None:
         match self.args.decode:
             case False:
-                return Kind.ENCODE
+                self.kind = Kind.ENCODE
 
             case True:
-                return Kind.DECODE
+                self.kind = Kind.DECODE
 
-        raise BadMatchError(self.args.decode)
-
-    def _read_input(self) -> str:
-        match self.source:
-            case Source.STDIN:
-                return input()
-
-            case Source.FILE:
-                return Path(self.args.file).read_text()
-
-        raise BadMatchError(self.kind)
-
-    def _encode_decode(self) -> str:
+    def _read_input(self) -> None:
         match self.kind:
             case Kind.ENCODE:
-                return self._encode()
+                self.input = input("text: ")
 
             case Kind.DECODE:
-                return self._decode()
+                self.input = input("text: ")
+                self.key = input("key: ")
 
-        raise BadMatchError(self.kind)
+    def _encode_decode(self) -> None:
+        match self.kind:
+            case Kind.ENCODE:
+                self._encode()
 
-    def _encode(self) -> str:
-        # k: u -> a, r: a -> u
-        segments: tuple[str, ...] = ("ku", "ra", "ko", "re", "ki", "ri", "ke", "ro", "ka", "ru")
+            case Kind.DECODE:
+                self._decode()
 
+    def _encode(self) -> None:
         encode_words: list[str] = self.input.split()
         encode_key: str = ""
-        perm_lv: int = 1
-        idx: int = 0
 
         freq: dict[str, int] = {
             k: v
@@ -97,18 +100,49 @@ class Kouriae:
         }
 
         for word in freq:
-            if idx == len(tuple(permutations(segments, perm_lv))):
-                perm_lv += 1
-                idx = 0
+            perm_seg: str = self._next_perm_seg()
+            encode_words = [perm_seg if w == word else w for w in encode_words]
+            encode_key += f"{word}^"
 
-            encode_word: str = "".join(tuple(permutations(segments, perm_lv))[idx])
-            encode_words = [encode_word if w == word else w for w in encode_words]
-            encode_key += f"{word}^{encode_word}^^"
+        zl = zlib.compress(encode_key.strip("^").encode())
+        b64 = base64.b64encode(zl)
 
-            idx += 1
+        self.output = " ".join(encode_words)
+        self.key = b64.decode()
 
-    def _decode(self) -> str:
-        ...
+    def _decode(self) -> None:
+        decode_words: list[str] = self.input.split()
+        de_b64: bytes = base64.b64decode(self.key.encode())
+        decode_key: str = zlib.decompress(de_b64).decode()
+
+        words: list[str] = decode_key.split("^")
+
+        for word in words:
+            perm_seg: str = self._next_perm_seg()
+            decode_words = [word if w == perm_seg else w for w in decode_words]
+
+        self.output = " ".join(decode_words)
+
+    def _next_perm_seg(self) -> str:
+        if self.idx == len(tuple(permutations(self.segments, self.perm_lv))):
+            self.idx = 0
+            self.perm_lv += 1
+
+        perm_seg: str = "".join(tuple(permutations(self.segments, self.perm_lv))[self.idx])
+        self.idx += 1
+
+        return perm_seg
+
+    def _output(self) -> None:
+        match self.kind:
+            case Kind.ENCODE:
+                print()
+                print(self.output)
+                print(self.key)
+
+            case Kind.DECODE:
+                print()
+                print(self.output)
 
 
 def main() -> None:

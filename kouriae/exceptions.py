@@ -1,2 +1,0 @@
-class BadMatchError(Exception):
-    pass
