@@ -56,4 +56,4 @@ hello there! how are you?
 
 ## ^
 
-`^` is a reserved character. Don't use it. Or do, though I don't recommend it. Probably.
+`^` is a reserved character. Don't use it. Unless you want to break things. Then go ahead.
