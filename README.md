@@ -4,7 +4,7 @@
 [![ruff](https://img.shields.io/badge/lint-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![mypy](https://img.shields.io/badge/type-mypy-000000.svg)](https://github.com/python/mypy)
 
-Ten-segment encoder/decoder. Intended to use via the CLI.
+Ten-segment encoder/decoder. Intended to be used via the CLI.
 
 ## Install
 
@@ -56,4 +56,4 @@ hello there! how are you?
 
 ## ^
 
-`^` is a reserved character. Don't use it. Or do. But I don't recommend it. Probably.
+`^` is a reserved character. Don't use it. Or do, though I don't recommend it. Probably.
