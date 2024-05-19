@@ -1,16 +1,12 @@
 [build-system]
-requires = ["setuptools>=68.1.0", "wheel"]
+requires = ["setuptools>=69.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "kouriae"
 version = "0.1.1"
-description = "Ten-segment encoder/decoder"
-readme = "README.md"
-authors = [{ name = "tainn" }]
-keywords = ["cli", "encoder", "decoder"]
+readme = "readme.md"
 dependencies = []
-requires-python = ">=3.11"
 
 [project.optional-dependencies]
 dev = ["ruff", "mypy"]
@@ -27,6 +23,8 @@ fix = true
 indent-width = 4
 line-length = 120
 src = ["kouriae"]
+
+[tool.ruff.lint]
 select = [
     "I001",
     "F401"
@@ -43,7 +41,11 @@ skip-magic-trailing-comma = false
 
 [tool.mypy]
 strict = true
-exclude = ["build"]
+disable_error_code = [
+    "no-any-return",
+    "func-returns-value"
+]
+exclude = ["venv", "build"]
 
 [[tool.mypy.overrides]]
 module = ["setuptools"]
