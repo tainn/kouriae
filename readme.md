@@ -7,7 +7,7 @@ ten-segment encoder/decoder. intended to be used via the cli
 fetch the latest version:
 
 ```console
-python3 -m pip install git+https://github.com/tainn/kouriae.git@0.1.1
+python3 -m pip install git+https://github.com/tainn/kouriae.git@0.1.2
 ```
 
 ## usage
