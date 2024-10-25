@@ -1,24 +1,24 @@
 # kouriae
 
-Ten-segment encoder/decoder. Intended to be used via the CLI.
+ten-segment encoder/decoder. intended to be used via the cli
 
-## Install
+## install
 
-Fetch the latest version:
+fetch the latest version:
 
 ```console
 python3 -m pip install git+https://github.com/tainn/kouriae.git@0.1.2
 ```
 
-## Usage
+## usage
 
-The script is accessible under the `kr` or `kouriae` command. By default, or by passing in the `-e/--encode` flag, it
-will encode the message. By passing in the `-d/--decode` flag, it will decode the message.
+the script is accessible under the `kr` or `kouriae` command. by default, or by passing in the `-e/--encode` flag, it
+will encode the message. by passing in the `-d/--decode` flag, it will decode the message
 
 - encode: 1 parameter in (text), 2 out (encoded text, key)
 - decode: 2 parameters in (encoded text, key), 1 out (decoded text)
 
-Standard help can be output via the `-h/--help` flag:
+standard help can be output via the `-h/--help` flag:
 
 ```console
 $ kr -h
@@ -30,9 +30,9 @@ options:
   -d, --decode  Decode the text
 ```
 
-## Example
+## example
 
-Sample encode and decode:
+sample encode and decode:
 
 ```console
 $ kr
